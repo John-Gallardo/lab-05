@@ -16,6 +16,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firestore.v1.WriteResult;
 
 import org.w3c.dom.Document;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements CityDialogFragment.CityDialogListener {
 
     private Button addCityButton;
+    private Button deleteCityButton;
     private ListView cityListView;
 
     private ArrayList<City> cityArrayList;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements CityDialogFragmen
 
         // Set views
         addCityButton = findViewById(R.id.buttonAddCity);
+        deleteCityButton = findViewById(R.id.buttonDeleteCity);
         cityListView = findViewById(R.id.listviewCities);
 
         // create city array
@@ -55,6 +58,11 @@ public class MainActivity extends AppCompatActivity implements CityDialogFragmen
         addCityButton.setOnClickListener(view -> {
             CityDialogFragment cityDialogFragment = new CityDialogFragment();
             cityDialogFragment.show(getSupportFragmentManager(),"Add City");
+        });
+
+        deleteCityButton.setOnClickListener(view -> {
+            CityDialogFragment cityDialogFragment = new CityDialogFragment();
+            cityDialogFragment.show(getSupportFragmentManager(), "Delete City");
         });
 
         cityListView.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -99,6 +107,21 @@ public class MainActivity extends AppCompatActivity implements CityDialogFragmen
 
         DocumentReference docRef = citiesRef.document(city.getName());
         docRef.set(city);
+    }
+
+    @Override
+    public void deleteCity(City city) {
+        // Brute force approach to deleting a city. Probably has a better way of doing this TBH
+        for (int i = 0 ; i < cityArrayList.size(); i++) {
+            String curr_city_name = cityArrayList.get(i).getName();
+            String curr_province_name = cityArrayList.get(i).getProvince();
+            if (curr_city_name == city.getName() && curr_province_name == city.getProvince()) {
+                cityArrayList.remove(i);
+            }
+        }
+
+        DocumentReference docRef = citiesRef.document(city.getName());
+        docRef.delete();
     }
 
     public void addDummyData(){
