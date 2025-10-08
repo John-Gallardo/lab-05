@@ -72,8 +72,9 @@ public class CityDialogFragment extends DialogFragment {
                     if (Objects.equals(tag, "City Details")) {
                         listener.updateCity(city, title, year);
                     } else if (Objects.equals(tag,  "Delete City")) {
-                        // TODO: This is broken!
-                        listener.deleteCity(city);
+                        String name = editMovieName.getText().toString();
+                        String province = editMovieYear.getText().toString();
+                        listener.deleteCity(new City(name, province));
                     } else {
                         listener.addCity(new City(title, year));
                     }

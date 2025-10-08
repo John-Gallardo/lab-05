@@ -111,14 +111,15 @@ public class MainActivity extends AppCompatActivity implements CityDialogFragmen
 
     @Override
     public void deleteCity(City city) {
-        // Brute force approach to deleting a city. Probably has a better way of doing this TBH
+        // Brute force approach to deleting a city. Probably has a better way of doing this TBH but I am lazy
         for (int i = 0 ; i < cityArrayList.size(); i++) {
             String curr_city_name = cityArrayList.get(i).getName();
             String curr_province_name = cityArrayList.get(i).getProvince();
-            if (curr_city_name == city.getName() && curr_province_name == city.getProvince()) {
+            if (curr_city_name.equals(city.getName()) && curr_province_name.equals(city.getProvince())) {
                 cityArrayList.remove(i);
             }
         }
+        cityArrayAdapter.notifyDataSetChanged();
 
         DocumentReference docRef = citiesRef.document(city.getName());
         docRef.delete();
